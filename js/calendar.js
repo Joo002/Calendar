@@ -62,7 +62,8 @@ document.querySelector(".dates").addEventListener("touchstart", e => {
 })
 
 window.addEventListener("touchmove", e => {
-    mouseY = e.pageY;
+    console.log(e)
+    mouseY = e.touches[0].pageY;
     if(drag_mode == 1 && e.buttons == 1){
         if (document.querySelector(".dates").scrollTop < ((firstdatesLine[0] + firstdatesLine[1])/2 * 100)){
             clicked_scrollY += ((firstdatesLine[1] - firstdatesLine[0]) * 100);
@@ -74,7 +75,7 @@ window.addEventListener("touchmove", e => {
             thisMonth.setMonth(thisMonth.getMonth() + 1)
             calendar_update();
         }
-        document.querySelector(".dates").scrollTo(0, clicked_scrollY + clicked_mouseY - e.clientY)
+        document.querySelector(".dates").scrollTo(0, clicked_scrollY + clicked_mouseY - e.touches[0].clientY)
     }
     if(drag_mode == 2 && e.buttons == 1){
         if(e.target.classList.contains("date") && !(e.target.classList.contains("otherMonth"))){
