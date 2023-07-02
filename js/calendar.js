@@ -86,3 +86,12 @@ window.addEventListener("mouseup", e => {
     document.querySelector(".dates").scrollTo({top:(firstdatesLine[1] * 100), left:0, behavior:'smooth'})
     drag_mode = false;
 })
+
+document.querySelector(".dates").addEventListener("wheel", function(e){
+    e.preventDefault();
+    e.stopPropagation();
+})
+document.querySelector(".dates").addEventListener("touchmove", function(e){
+    e.preventDefault();
+    e.stopPropagation();
+})
