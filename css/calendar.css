@@ -52,6 +52,7 @@ body {
     display: none;
 }
 .dates > * {
+    -webkit-tap-highlight-color: transparent;
     width: calc(100% / 7);
     height: 150px;
     display: flex;
