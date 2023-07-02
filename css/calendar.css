@@ -1,6 +1,9 @@
 * {
     -webkit-tap-highlight-color: transparent;
 }
+html {
+    overflow: hidden;
+}
 body {
     font-family: 'AppleSDGothicNeo';
     margin: 0px;

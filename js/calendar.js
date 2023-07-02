@@ -45,15 +45,18 @@ drag_mode = 0;
 
 calendar_update();
 document.querySelector(".dates").scrollTo(0,500)
-document.querySelector(".dates").addEventListener("touchstart", e => {
-    clicked_scrollY = document.querySelector(".dates").scrollTop;
-    clicked_mouseY = e.clientY;
 
+document.querySelector(".dates").addEventListener("touchstart", e => {
+    console.log("a")
+    clicked_scrollY = document.querySelector(".dates").scrollTop;
+    clicked_mouseY = e.touches[0].clientY;
+    mouseY = e.touches[0].pageY;
 
     temp = mouseY;
     window.setTimeout(function(){
         if(temp == mouseY){
             selectedDate = dates[e.target.id]; calendar_update();
+            document.querySelector(".dates").style.overflow = "hidden"
             drag_mode = 2;
         } else {
             drag_mode = 1;
@@ -62,9 +65,9 @@ document.querySelector(".dates").addEventListener("touchstart", e => {
 })
 
 window.addEventListener("touchmove", e => {
-    console.log(e)
     mouseY = e.touches[0].pageY;
-    if(drag_mode == 1 && e.buttons == 1){
+    /*
+    if(drag_mode == 1){
         if (document.querySelector(".dates").scrollTop < ((firstdatesLine[0] + firstdatesLine[1])/2 * 100)){
             clicked_scrollY += ((firstdatesLine[1] - firstdatesLine[0]) * 100);
             thisMonth.setMonth(thisMonth.getMonth() - 1)
@@ -77,18 +80,26 @@ window.addEventListener("touchmove", e => {
         }
         document.querySelector(".dates").scrollTo(0, clicked_scrollY + clicked_mouseY - e.touches[0].clientY)
     }
-    if(drag_mode == 2 && e.buttons == 1){
+    if(drag_mode == 2){
         if(e.target.classList.contains("date") && !(e.target.classList.contains("otherMonth"))){
             selectedDate = dates[e.target.id]; calendar_update();
         }
     }
-})
-window.addEventListener("touchend", e => {
-    document.querySelector(".dates").scrollTo({top:(firstdatesLine[1] * 100), left:0, behavior:'smooth'})
-    drag_mode = false;
+    */
+   
+    document.querySelector(".dates").scrollTop = clicked_scrollY + clicked_mouseY - e.touches[0].clientY
+    console.log(e.touches[0].clientY)
 })
 
-document.querySelector(".dates").addEventListener("wheel", function(e){
-    e.preventDefault();
-    e.stopPropagation();
+window.addEventListener("touchend", e => {
+    //document.querySelector(".dates").scrollTo({top:(firstdatesLine[1] * 100), left:0, behavior:'smooth'})
+    drag_mode = false;
+    document.querySelector(".dates").style.overflow = "scroll"
 })
+
+
+document.querySelector(".dates").addEventListener("touchmove", function(e){
+    e.preventDefault();
+    return false;
+})
+
