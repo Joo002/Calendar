@@ -91,7 +91,3 @@ document.querySelector(".dates").addEventListener("wheel", function(e){
     e.preventDefault();
     e.stopPropagation();
 })
-document.querySelector(".dates").addEventListener("touchmove", function(e){
-    e.preventDefault();
-    e.stopPropagation();
-})
