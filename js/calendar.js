@@ -4,7 +4,7 @@ selectedDate = new Date();
 function calendar_update(){
     dates = []
     firstdatesLine = []
-    document.querySelector(".month").innerText = thisMonth.getFullYear() + "년 " + (thisMonth.getMonth() + 1) + "월";
+    document.querySelector(".month").value = thisMonth.getFullYear() + "-" + String((thisMonth.getMonth() + 1)).padStart(2,'0');
 
     document.querySelector(".dates").innerHTML = ""
     for(i = 0; i < (7 * 16); i++){
@@ -18,7 +18,7 @@ function calendar_update(){
         ele_date.className = "date";
         ele_date.id = i
         ele_date.style.cursor = "pointer";
-        ele_date.addEventListener("click", (e) => {calendar_select(e)})
+        ele_date.addEventListener("click", (e) => {selectedDate = dates[e.target.id]; calendar_update();})
         ele_date_.innerText = today.getDate();
         ele_date__.innerText = "　";
         if (thisMonth.getMonth() != today.getMonth()) { ele_date.classList.add("otherMonth") }
@@ -30,41 +30,37 @@ function calendar_update(){
     document.querySelector(".dates").scrollTo(0,100*firstdatesLine[1])
 }
 function calendar_update_Month(){
-    document.querySelector(".month").innerText = thisMonth.getFullYear() + "년 " + (thisMonth.getMonth() + 1) + "월";
+    document.querySelector(".month").value = thisMonth.getFullYear() + "-" + String((thisMonth.getMonth() + 1)).padStart(2,'0');
     ele_dates = document.querySelectorAll(".date")
     for(i = 0; i < ele_dates.length; i++){
         ele_dates[i].classList.remove("otherMonth")
-        console.log(thisMonth.getMonth(), dates[i].getMonth())
         if (thisMonth.getMonth() != dates[i].getMonth()) { ele_dates[i].classList.add("otherMonth") }
     }
     
     
 }
 
-function calendar_select(e){
-    selectedDate = dates[e.target.id];
-    calendar_update();
-}
 calendar_update();
 
 changed = false;
 
 document.querySelector(".dates").addEventListener("scroll", e => {
+    console.log(document.querySelector(".dates").scrollTop);
     if (document.querySelector(".dates").scrollTop < 300 && changed == false){
         thisMonth.setMonth(thisMonth.getMonth() - 1)
         calendar_update_Month();
         changed = true;
     }
-    if (document.querySelector(".dates").scrollTop > 900 && changed == false){
+    if (document.querySelector(".dates").scrollTop > 700 && changed == false){
         thisMonth.setMonth(thisMonth.getMonth() + 1)
         calendar_update_Month();
         changed = true;
     }
-    if (document.querySelector(".dates").scrollTop <= (firstdatesLine[0] * 100 + 30)){
+    if (document.querySelector(".dates").scrollTop <= (firstdatesLine[0] * 100 + 1)){
         calendar_update();
         changed = false;
     }
-    if (document.querySelector(".dates").scrollTop >= (firstdatesLine[2] * 100 - 30)){
+    if (document.querySelector(".dates").scrollTop >= (firstdatesLine[2] * 100 - 1)){
         calendar_update();
         changed = false;
     }
