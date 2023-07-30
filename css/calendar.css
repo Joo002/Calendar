@@ -10,7 +10,6 @@ body {
 }
 .calendar {
     width: 100%;
-    user-select: none;
     font-size: 28px;
 }
 .month {
@@ -47,16 +46,11 @@ body {
     align-items: center;
     justify-content: center;
 }
-.dates {
+.container-date {
     display: flex;
     flex-wrap: wrap;
-    height: 600px;
-    overflow: scroll;
 }
-.dates::-webkit-scrollbar {
-    display: none;
-}
-.dates > * {
+.container-date > * {
     width: calc(100% / 7);
     height: 100px;
     display: flex;
@@ -100,4 +94,17 @@ body {
     border-radius: 50%;
     transform: translate(-50%, -50%);
     content: '';
+}
+
+.wrapper-container-date {
+    overflow:hidden;
+    height: 600px;
+}
+
+.container-dates {
+    position: relative;
+    top: -505px;
+    &.snap {
+        transition: 0.25s;
+    }
 }

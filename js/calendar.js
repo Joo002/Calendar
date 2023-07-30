@@ -1,105 +1,73 @@
-thisMonth = new Date();
-thisMonth.setDate(1);
+
 selectedDate = new Date();
 
-function calendar_update(){
-    dates = []
-    firstdatesLine = []
-    document.querySelector(".month").value = thisMonth.getFullYear() + "-" + String((thisMonth.getMonth() + 1)).padStart(2,'0');
+function calendar_update(Year, Month){
+    //Update Month Text
+    document.querySelector(".month").value = Year + "-" + String((Month + 1)).padStart(2,'0');
 
-    document.querySelector(".dates").innerHTML = ""
-    for(i = 0; i < (7 * 16); i++){
-        today = new Date(thisMonth - (86400000 * thisMonth.getDay()) + (86400000 * (i - 35)));
-        dates.push(today);
-        ele_date = document.createElement("span");
-        ele_date_ = document.createElement("div");
-        ele_date__ = document.createElement("div");
-        ele_date.append(ele_date_)
-        ele_date.append(ele_date__)
-        ele_date.className = "date";
-        ele_date.id = i
-        ele_date.style.cursor = "pointer";
-        ele_date_.innerText = today.getDate();
-        ele_date__.innerText = "900,000,000\\";
-        if (thisMonth.getMonth() != today.getMonth()) { ele_date.classList.add("otherMonth") }
-        if (selectedDate.getMonth() == today.getMonth() && selectedDate.getDate() == today.getDate()) { ele_date.classList.add("selected") }
-        if (today.getDate() == 1) { firstdatesLine.push(parseInt(i/7))}
-        document.querySelector(".dates").append(ele_date);                
+    for (j = -1; j < 2; j++){
+        switch (j){
+            case -1 : arg = "[class='container-date prev']"; break;
+            case 0 : arg = "[class='container-date']"; break;
+            case 1 : arg = "[class='container-date next']"; break;
+        }
+        thisMonth = new Date(Year, Month + j, 1);
+        today = new Date(thisMonth)
+        temp = document.createElement("div")
+        //Draw Empty Date
+        for (k = 0; k < thisMonth.getDay(); k++){
+            ele_date = document.createElement("span");
+            temp.append(ele_date);
+        }
+        //Draw Date Container
+        for(i = 0; i < 31; i++){
+            ele_date = document.createElement("span");
+            ele_date_ = document.createElement("div");
+            ele_date__ = document.createElement("div");
+            ele_date.append(ele_date_)
+            ele_date.append(ele_date__)
+            ele_date.className = "date";
+            ele_date.id = i
+            ele_date.style.cursor = "pointer";
+            ele_date_.innerText = today.getDate();
+            //ele_date__.innerText = "900,000,000\\";
+            if (thisMonth.getMonth() != today.getMonth()) { break; }
+            if (selectedDate.getMonth() == today.getMonth() && selectedDate.getDate() == today.getDate()) { ele_date.classList.add("selected") }
+            temp.append(ele_date);
+            today.setDate(today.getDate() + 1);
+        }
+        document.querySelector(arg).innerHTML = temp.innerHTML
     }
-    firstdatesLine = firstdatesLine.slice(0,3)
-    //document.querySelector(".dates").scrollTo(0,100*firstdatesLine[1])
+    containerTop = Math.ceil(document.querySelector("[class='container-date prev']").childElementCount/7) * -101
+    wrapperHeight = Math.ceil(document.querySelector("[class='container-date']").childElementCount/7) * 100
+    document.querySelector(".container-dates").style.top = containerTop;
+    document.querySelector(".wrapper-container-date").style.height = wrapperHeight;
 }
-function calendar_update_Month(){
-    document.querySelector(".month").value = thisMonth.getFullYear() + "-" + String((thisMonth.getMonth() + 1)).padStart(2,'0');
-    ele_dates = document.querySelectorAll(".date")
-    for(i = 0; i < ele_dates.length; i++){
-        ele_dates[i].classList.remove("otherMonth")
-        if (thisMonth.getMonth() != dates[i].getMonth()) { ele_dates[i].classList.add("otherMonth") }
+
+calendar_update(2023, 6);
+
+
+
+
+
+
+
+document.querySelector(".wrapper-container-date").addEventListener("touchstart", e => {
+    touch_startY = e.changedTouches[0].clientY;
+    document.querySelector(".container-dates").classList.remove('snap')
+    console.log(e.target)
+});
+document.querySelector(".wrapper-container-date").addEventListener("touchmove", e => {
+    touch_draggedY = touch_startY - e.changedTouches[0].clientY;
+    if (touch_draggedY > wrapperHeight / 2){ console.log("a")}
+    if (touch_draggedY < wrapperHeight / 2 * -1){
+        calendar_update(2023, 5);
+        //touch_startY += containerTop
+        console.log("b")
     }
-    
-    
-}
-
-drag_mode = 0;
-
-
-calendar_update();
-document.querySelector(".dates").scrollTo(0,500)
-
-document.querySelector(".dates").addEventListener("touchstart", e => {
-    console.log("a")
-    clicked_scrollY = document.querySelector(".dates").scrollTop;
-    clicked_mouseY = e.touches[0].clientY;
-    mouseY = e.touches[0].pageY;
-
-    temp = mouseY;
-    window.setTimeout(function(){
-        if(temp == mouseY){
-            selectedDate = dates[e.target.id]; calendar_update();
-            document.querySelector(".dates").style.overflow = "hidden"
-            drag_mode = 2;
-        } else {
-            drag_mode = 1;
-        }
-    }, 50)
-})
-
-window.addEventListener("touchmove", e => {
-    mouseY = e.touches[0].pageY;
-    /*
-    if(drag_mode == 1){
-        if (document.querySelector(".dates").scrollTop < ((firstdatesLine[0] + firstdatesLine[1])/2 * 100)){
-            clicked_scrollY += ((firstdatesLine[1] - firstdatesLine[0]) * 100);
-            thisMonth.setMonth(thisMonth.getMonth() - 1)
-            calendar_update();
-        }
-        if (document.querySelector(".dates").scrollTop > ((firstdatesLine[1] + firstdatesLine[2])/2 * 100)){
-            clicked_scrollY += ((firstdatesLine[1] - firstdatesLine[2]) * 100);
-            thisMonth.setMonth(thisMonth.getMonth() + 1)
-            calendar_update();
-        }
-        document.querySelector(".dates").scrollTo(0, clicked_scrollY + clicked_mouseY - e.touches[0].clientY)
-    }
-    if(drag_mode == 2){
-        if(e.target.classList.contains("date") && !(e.target.classList.contains("otherMonth"))){
-            selectedDate = dates[e.target.id]; calendar_update();
-        }
-    }
-    */
-   
-    document.querySelector(".dates").scrollTop = clicked_scrollY + clicked_mouseY - e.touches[0].clientY
-    console.log(e.touches[0].clientY)
-})
-
-window.addEventListener("touchend", e => {
-    //document.querySelector(".dates").scrollTo({top:(firstdatesLine[1] * 100), left:0, behavior:'smooth'})
-    drag_mode = false;
-    document.querySelector(".dates").style.overflow = "scroll"
-})
-
-
-document.querySelector(".dates").addEventListener("touchmove", function(e){
-    e.preventDefault();
-    return false;
-})
-
+    document.querySelector(".container-dates").style.top = containerTop - touch_draggedY;
+});
+document.querySelector(".wrapper-container-date").addEventListener("touchend", e => {
+    document.querySelector(".container-dates").classList.add('snap')
+    document.querySelector(".container-dates").style.top = containerTop;
+});
